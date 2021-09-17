@@ -1,11 +1,10 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
 	"github.com/spf13/cobra"
-
 	"github.com/spf13/viper"
+	"os"
+	"fmt"
 )
 
 var cfgFile string
@@ -27,7 +26,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	
+
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.side-projects.yaml)")
 }
 

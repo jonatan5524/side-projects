@@ -1,7 +1,7 @@
 package main
 
 import (
-	"side-projects/cmd"
+	"github.com/jonatan5524/side-projects-manager/cmd"
 )
 
 func main() {
