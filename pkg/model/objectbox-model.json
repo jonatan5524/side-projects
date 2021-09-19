@@ -1,0 +1,65 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:8947952346831703109",
+      "lastPropertyId": "2:5333859000064323151",
+      "name": "Project",
+      "properties": [
+        {
+          "id": "1:6685991751621789239",
+          "name": "Id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5333859000064323151",
+          "name": "Name",
+          "type": 9
+        }
+      ]
+    },
+    {
+      "id": "2:2320572947317104634",
+      "lastPropertyId": "3:8390037328836579006",
+      "name": "ParentDirectory",
+      "properties": [
+        {
+          "id": "1:1625496803756030728",
+          "name": "Id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2223712999706917135",
+          "name": "Path",
+          "type": 9
+        },
+        {
+          "id": "3:8390037328836579006",
+          "name": "LastUpdated",
+          "type": 10
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:1519504732792433350",
+          "name": "Projects",
+          "targetId": "1:8947952346831703109"
+        }
+      ]
+    }
+  ],
+  "lastEntityId": "2:2320572947317104634",
+  "lastIndexId": "",
+  "lastRelationId": "1:1519504732792433350",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

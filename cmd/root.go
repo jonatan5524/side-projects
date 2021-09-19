@@ -2,10 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"github.com/spf13/cobra"
-
 	"github.com/spf13/viper"
+	"os"
 )
 
 var cfgFile string
@@ -27,7 +26,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	
+
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.side-projects.yaml)")
 }
 
@@ -43,7 +42,7 @@ func initConfig() {
 		viper.SetConfigName(".side-projects")
 	}
 
-	viper.AutomaticEnv() 
+	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
