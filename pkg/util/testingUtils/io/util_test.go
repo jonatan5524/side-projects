@@ -7,20 +7,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateTempDirectory_success(t *testing.T) {
-	path := CreateTempDirectory()
+func TestCreateTempDirectory(t *testing.T) {
+	path := CreateTempDirectory(t)
 	defer os.Remove(path)
 
-	_, err := os.Stat(path);
+	_, err := os.Stat(path)
 
 	assert.Nil(t, err)
 }
 
-func TestCreateTempFile_success(t *testing.T) {
-	path := CreateTempFile()
+func TestCreateTempFile(t *testing.T) {
+	path := CreateTempFile(t)
 	defer os.Remove(path)
 
-	_, err := os.Stat(path);
+	_, err := os.Stat(path)
 
 	assert.Nil(t, err)
 }

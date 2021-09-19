@@ -1,10 +1,10 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"os"
-	"fmt"
 )
 
 var cfgFile string
@@ -42,7 +42,7 @@ func initConfig() {
 		viper.SetConfigName(".side-projects")
 	}
 
-	viper.AutomaticEnv() 
+	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())

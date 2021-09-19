@@ -5,42 +5,55 @@ import (
 
 	config "github.com/jonatan5524/side-projects-manager/pkg/config/db"
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
-	"github.com/jonatan5524/side-projects-manager/pkg/repository"
+	repository "github.com/jonatan5524/side-projects-manager/pkg/repository/parentDirectory"
+	usecase "github.com/jonatan5524/side-projects-manager/pkg/usecase/parentDirectory"
+	"github.com/jonatan5524/side-projects-manager/pkg/util"
 	"github.com/spf13/cobra"
 )
 
 var addDirCmd = &cobra.Command{
 	Use:   "add-dir",
 	Short: "Adding directory of side projects",
-	Long: `Adding directory to list of directories that contains side projects`,
-	Run: AddDir,
+	Long:  `Adding directory to list of directories that contains side projects`,
+	Run:   addDir,
 }
 
-// TODO: making service and testing
-func AddDir(cmd *cobra.Command, args []string) {
+type ParentDirectoryConstructor func(string, model.DirectoryGetter) (model.ParentDirectory, error)
+
+func addDir(cmd *cobra.Command, args []string) {
+	if args[0] == "" {
+		panic("path not added")
+	}
+
 	db, err := config.InitDB()
-	fmt.Println("Initalizing db")
 
 	if err != nil {
-		panic(fmt.Sprintf("error while initalizing db: %v", err))
+		panic(err)
 	}
+	defer db.Close()
 
-	repo := repository.NewParentDirectoryRepositoryObjectBox(db)
-	fmt.Printf("saving new parent directory: %s\n", args[0])
-	parentDir, err := model.NewParentDirectory(args[0])
+	repository := repository.NewParentDirectoryObjectBoxRepository(db)
+	service := usecase.NewParentDirectoryService(repository)
+
+	addParentDirectoryToDB(service, args[0], model.NewParentDirectory)
+}
+
+func addParentDirectoryToDB(service usecase.ParentDirectoryUsecase, path string, parentDirectoryConstructor ParentDirectoryConstructor) {
+	parentDirectory, err := parentDirectoryConstructor(path, util.GetDirectory)
 
 	if err != nil {
-		panic(fmt.Sprintf("error while adding new dir: %v\n", err))
+		panic(err)
 	}
 
-	if _, err := repo.Put(parentDir); err != nil {
-		panic(fmt.Sprintf("error while adding new dir: %v", err))
-	} 
+	_, err = service.Put(parentDirectory)
 
-	fmt.Println("new directory saved!")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Directory added!")
 }
 
 func init() {
 	rootCmd.AddCommand(addDirCmd)
-
 }

@@ -1,34 +1,33 @@
 package model
 
 import (
-	"github.com/jonatan5524/side-projects-manager/pkg/util"
+	"os"
 	"time"
 )
 
 //go:generate go run github.com/objectbox/objectbox-go/cmd/objectbox-gogen
 
 type ParentDirectory struct {
-	Id uint64
-	Path string
+	Id          uint64
+	Path        string
 	LastUpdated time.Time `objectbox:"date"`
-	Projects []*Project
+	Projects    []*Project
 }
 
-// TODO: making tests
-func NewParentDirectory(path string) (*ParentDirectory, error) {
-	directoryInfo, err := util.GetDirectoryIfExists(path)
-	
+var NilParentDirectory = ParentDirectory{}
+
+type DirectoryGetter func(string) (os.FileInfo, error)
+
+func NewParentDirectory(path string, directoryGetter DirectoryGetter) (ParentDirectory, error) {
+	directoryInfo, err := directoryGetter(path)
+
 	if err != nil {
-		return nil, err
+		return NilParentDirectory, err
 	}
 
-	return &ParentDirectory{
-		Path: path,
+	return ParentDirectory{
+		Path:        path,
 		LastUpdated: directoryInfo.ModTime(),
-		Projects: []*Project{},
+		Projects:    []*Project{},
 	}, nil
-}
-
-type ParentDirectoryRepository interface {
-	Put(*ParentDirectory) (uint64, error)
 }

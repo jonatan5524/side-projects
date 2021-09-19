@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"os"
 	"testing"
 	"time"
 
@@ -9,12 +10,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPut_success(t *testing.T) {
-	testDB := config.InitTestDB()
+func TestPut(t *testing.T) {
+	testDB := config.InitTestDB(t)
 	defer testDB.Close()
 
-	repo := NewParentDirectoryRepositoryObjectBox(testDB)
-	parentDir := &model.ParentDirectory{ Path: "temp", LastUpdated: time.Now(), Projects: []*model.Project{}}
+	repo := NewParentDirectoryObjectBoxRepository(testDB)
+	parentDir := model.ParentDirectory{Path: os.TempDir(), LastUpdated: time.Now(), Projects: []*model.Project{}}
 
 	id, err := repo.Put(parentDir)
 

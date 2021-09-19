@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"testing"
 
 	"github.com/jonatan5524/side-projects-manager/pkg/core"
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
@@ -9,22 +10,26 @@ import (
 	"github.com/objectbox/objectbox-go/objectbox"
 )
 
+var (
+	ErrInitDB = errors.New("error initalize db")
+)
+
 func InitDB() (*objectbox.ObjectBox, error) {
 	objectbox, err := objectbox.NewBuilder().Model(model.ObjectBoxModel()).Build()
 
 	if err != nil {
-		return nil, core.NewDBError("Initialize", errors.New("trying to initizling db"))
+		return nil, core.NewDBError("Initialize", ErrInitDB)
 	}
 
 	return objectbox, nil
 }
 
-func InitTestDB() *objectbox.ObjectBox {
-	tempPath := testingUtils.CreateTempDirectory()
+func InitTestDB(t *testing.T) *objectbox.ObjectBox {
+	tempPath := testingUtils.CreateTempDirectory(t)
 	objectbox, err := objectbox.NewBuilder().Model(model.ObjectBoxModel()).Directory(tempPath).Build()
 
 	if err != nil {
-		panic("unable to create test db")
+		t.Fatal("unable to create test db")
 	}
 
 	return objectbox

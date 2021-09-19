@@ -9,29 +9,33 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetDirectoryIfExists_DirectoryExists(t *testing.T) {
-	tempDirPath := testingUtils.CreateTempDirectory()
+func TestGetDirectory_DirectoryExists(t *testing.T) {
+	tempDirPath := testingUtils.CreateTempDirectory(t)
 	defer os.Remove(tempDirPath)
 
-	directory, err := GetDirectoryIfExists(tempDirPath)
+	directory, err := GetDirectory(tempDirPath)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, directory)
 }
 
-func TestGetDirectoryIfExists_PathNotExists(t *testing.T) {
-	directory, err := GetDirectoryIfExists("/MadeUpPath")
-	
-	assert.IsType(t, err, &core.IOError{})
+func TestGetDirectory_PathNotExists(t *testing.T) {
+	path := "/MadeUpPath"
+	expectedError := core.NewIOError(path, ErrFileNotExists)
+
+	directory, err := GetDirectory("/MadeUpPath")
+
+	assert.Equal(t, expectedError, err)
 	assert.Nil(t, directory)
 }
 
-func TestGetDirectoryIfExists_DirectoryIsFile(t *testing.T) {
-	tempFilePath := testingUtils.CreateTempFile()
+func TestGetDirectory_DirectoryIsFile(t *testing.T) {
+	tempFilePath := testingUtils.CreateTempFile(t)
 	defer os.Remove(tempFilePath)
+	expectedError := core.NewIOError(tempFilePath, ErrDirInvalidType)
 
-	directory, err := GetDirectoryIfExists(tempFilePath)
+	directory, err := GetDirectory(tempFilePath)
 
-	assert.IsType(t, err, &core.IOError{})
+	assert.Equal(t, expectedError, err)
 	assert.Nil(t, directory)
 }
