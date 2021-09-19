@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Running pre-commit hook"
-./run-tests.sh
+./githooks/run-tests.sh
 
 # $? stores exit value of the last command
 if [ $? -ne 0 ]; then
