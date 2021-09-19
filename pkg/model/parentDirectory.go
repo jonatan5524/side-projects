@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-//go:generate go run github.com/objectbox/objectbox-go/cmd/objectbox-gogen
+//go:generate go run github.com/objectbox/objectbox-go/cmd/objectbox-gogen -out objectbox
 
 type ParentDirectory struct {
 	Id          uint64
