@@ -13,13 +13,13 @@ type DirectoryGetter struct {
 	mock.Mock
 }
 
-// Execute provides a mock function with given fields: path
-func (_m *DirectoryGetter) Execute(path string) (fs.FileInfo, error) {
-	ret := _m.Called(path)
+// Execute provides a mock function with given fields: _a0
+func (_m *DirectoryGetter) Execute(_a0 string) (fs.FileInfo, error) {
+	ret := _m.Called(_a0)
 
 	var r0 fs.FileInfo
 	if rf, ok := ret.Get(0).(func(string) fs.FileInfo); ok {
-		r0 = rf(path)
+		r0 = rf(_a0)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(fs.FileInfo)
@@ -28,7 +28,7 @@ func (_m *DirectoryGetter) Execute(path string) (fs.FileInfo, error) {
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(path)
+		r1 = rf(_a0)
 	} else {
 		r1 = ret.Error(1)
 	}

@@ -7,7 +7,7 @@ import (
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
 	repository "github.com/jonatan5524/side-projects-manager/pkg/repository/parentDirectory"
 	usecase "github.com/jonatan5524/side-projects-manager/pkg/usecase/parentDirectory"
-	"github.com/jonatan5524/side-projects-manager/pkg/util"
+	util "github.com/jonatan5524/side-projects-manager/pkg/util/io"
 	"github.com/spf13/cobra"
 )
 
@@ -17,8 +17,6 @@ var addDirCmd = &cobra.Command{
 	Long:  `Adding directory to list of directories that contains side projects`,
 	Run:   addDir,
 }
-
-type ParentDirectoryConstructor func(string, model.DirectoryGetter) (model.ParentDirectory, error)
 
 func addDir(cmd *cobra.Command, args []string) {
 	if args[0] == "" {
@@ -38,8 +36,14 @@ func addDir(cmd *cobra.Command, args []string) {
 	addParentDirectoryToDB(service, args[0], model.NewParentDirectory)
 }
 
-func addParentDirectoryToDB(service usecase.ParentDirectoryUsecase, path string, parentDirectoryConstructor ParentDirectoryConstructor) {
+func addParentDirectoryToDB(service usecase.ParentDirectoryUsecase, path string, parentDirectoryConstructor model.ParentDirectoryConstructor) {
 	parentDirectory, err := parentDirectoryConstructor(path, util.GetDirectory)
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = parentDirectory.LoadProjects()
 
 	if err != nil {
 		panic(err)
@@ -52,6 +56,7 @@ func addParentDirectoryToDB(service usecase.ParentDirectoryUsecase, path string,
 	}
 
 	fmt.Println("Directory added!")
+	fmt.Printf("%v\n", &parentDirectory)
 }
 
 func init() {

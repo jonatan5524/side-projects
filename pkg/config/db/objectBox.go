@@ -6,7 +6,7 @@ import (
 
 	"github.com/jonatan5524/side-projects-manager/pkg/core"
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
-	testingUtils "github.com/jonatan5524/side-projects-manager/pkg/util/testingUtils/io"
+	testingUtils "github.com/jonatan5524/side-projects-manager/pkg/util/testingUtils"
 	"github.com/objectbox/objectbox-go/objectbox"
 )
 
