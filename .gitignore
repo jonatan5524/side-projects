@@ -17,4 +17,5 @@
 
 *.obx.go
 objectbox-model.go
-objectbox
+*mdb
+!objectbox-model.json

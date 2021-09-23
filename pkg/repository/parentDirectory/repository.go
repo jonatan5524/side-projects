@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/jonatan5524/side-projects-manager/pkg/core"
+	core "github.com/jonatan5524/side-projects-manager/pkg/core/errors"
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
 	"github.com/objectbox/objectbox-go/objectbox"
 )

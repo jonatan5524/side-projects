@@ -5,17 +5,18 @@ import (
 	"testing"
 	"time"
 
-	cmdMock "github.com/jonatan5524/side-projects-manager/cmd/mocks"
-	"github.com/jonatan5524/side-projects-manager/pkg/core"
+	core "github.com/jonatan5524/side-projects-manager/pkg/core/errors"
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
+	modelMock "github.com/jonatan5524/side-projects-manager/pkg/model/mocks"
 	usecaseMock "github.com/jonatan5524/side-projects-manager/pkg/usecase/mocks"
-	"github.com/jonatan5524/side-projects-manager/pkg/util"
+	util "github.com/jonatan5524/side-projects-manager/pkg/util/io"
+	"github.com/jonatan5524/side-projects-manager/pkg/util/testingUtils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
 func TestAddParentDirectoryToDB_Success(t *testing.T) {
-	path := "/tmp"
+	path := testingUtils.CreateTempDirectory(t)
 	parentDir := model.ParentDirectory{
 		Path:        path,
 		LastUpdated: time.Now(),
@@ -24,7 +25,7 @@ func TestAddParentDirectoryToDB_Success(t *testing.T) {
 	parentDirWithId := parentDir
 	parentDirWithId.Id = 1
 
-	mockParentDirCtor := new(cmdMock.ParentDirectoryConstructor)
+	mockParentDirCtor := new(modelMock.ParentDirectoryConstructor)
 	mockParentDirCtor.On("Execute", mock.Anything, mock.Anything).Return(parentDir, nil)
 
 	mockService := new(usecaseMock.ParentDirectoryUsecase)
@@ -41,7 +42,7 @@ func TestAddParentDirectoryToDB_InvalidPath(t *testing.T) {
 	path := "/madeUp"
 	expectedError := core.NewIOError(path, util.ErrFileNotExists)
 
-	mockParentDirCtor := new(cmdMock.ParentDirectoryConstructor)
+	mockParentDirCtor := new(modelMock.ParentDirectoryConstructor)
 	mockParentDirCtor.On("Execute", mock.Anything, mock.Anything).Return(model.NilParentDirectory, expectedError)
 
 	mockService := new(usecaseMock.ParentDirectoryUsecase)
@@ -54,7 +55,7 @@ func TestAddParentDirectoryToDB_InvalidPath(t *testing.T) {
 }
 
 func TestAddParentDirectoryToDB_PutError(t *testing.T) {
-	path := "/tmp"
+	path := testingUtils.CreateTempDirectory(t)
 	parentDir := model.ParentDirectory{
 		Path:        path,
 		LastUpdated: time.Now(),
@@ -64,7 +65,7 @@ func TestAddParentDirectoryToDB_PutError(t *testing.T) {
 	parentDirWithId.Id = 1
 	expectedError := core.NewDBError("PUT", errors.New("db error"))
 
-	mockParentDirCtor := new(cmdMock.ParentDirectoryConstructor)
+	mockParentDirCtor := new(modelMock.ParentDirectoryConstructor)
 	mockParentDirCtor.On("Execute", mock.Anything, mock.Anything).Return(parentDir, nil)
 
 	mockService := new(usecaseMock.ParentDirectoryUsecase)

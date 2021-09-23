@@ -1,10 +1,14 @@
 package model
 
 import (
-	"os"
+	"fmt"
+	"path/filepath"
 	"time"
+
+	util "github.com/jonatan5524/side-projects-manager/pkg/util/io"
 )
 
+//go:generate go run github.com/objectbox/objectbox-go/cmd/objectbox-gogen clean
 //go:generate go run github.com/objectbox/objectbox-go/cmd/objectbox-gogen
 
 type ParentDirectory struct {
@@ -16,9 +20,9 @@ type ParentDirectory struct {
 
 var NilParentDirectory = ParentDirectory{}
 
-type DirectoryGetter func(string) (os.FileInfo, error)
+type ParentDirectoryConstructor func(string, util.DirectoryGetter) (ParentDirectory, error)
 
-func NewParentDirectory(path string, directoryGetter DirectoryGetter) (ParentDirectory, error) {
+func NewParentDirectory(path string, directoryGetter util.DirectoryGetter) (ParentDirectory, error) {
 	directoryInfo, err := directoryGetter(path)
 
 	if err != nil {
@@ -30,4 +34,42 @@ func NewParentDirectory(path string, directoryGetter DirectoryGetter) (ParentDir
 		LastUpdated: directoryInfo.ModTime(),
 		Projects:    []*Project{},
 	}, nil
+}
+
+func (parentDir *ParentDirectory) LoadProjects() error {
+	projectsInfo, err := util.ListDirectory(parentDir.Path, util.FilterByDirectories)
+
+	if err != nil {
+		return err
+	}
+
+	projects := []*Project{}
+
+	for _, fileInfo := range projectsInfo {
+		project, err := NewProject(filepath.Join(parentDir.Path, fileInfo.Name()), util.GetDirectory)
+
+		if err != nil {
+			return err
+		}
+
+		projects = append(projects, &project)
+	}
+
+	parentDir.Projects = projects
+
+	return nil
+}
+
+func (parentDir *ParentDirectory) String() string {
+	return fmt.Sprintf(`ParentDirectory {
+	Id: %d
+	Path: %s
+	LastUpdated: %v
+	Projects: %v
+}`,
+		parentDir.Id,
+		parentDir.Path,
+		parentDir.LastUpdated,
+		parentDir.Projects,
+	)
 }

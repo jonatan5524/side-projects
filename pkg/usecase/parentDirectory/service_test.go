@@ -1,4 +1,4 @@
-package usecase
+package usecase_test
 
 import (
 	"os"
@@ -7,13 +7,14 @@ import (
 
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
 	"github.com/jonatan5524/side-projects-manager/pkg/repository/mocks"
+	usecase "github.com/jonatan5524/side-projects-manager/pkg/usecase/parentDirectory"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
 func TestPut(t *testing.T) {
 	repoMock := new(mocks.ParentDirectoryRepository)
-	service := NewParentDirectoryService(repoMock)
+	service := usecase.NewParentDirectoryService(repoMock)
 	parentDir := model.ParentDirectory{Path: os.TempDir(), LastUpdated: time.Now(), Projects: []*model.Project{}}
 
 	const ID_RET uint64 = 1
