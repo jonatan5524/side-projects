@@ -2,12 +2,16 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+
+	core "github.com/jonatan5524/side-projects-manager/pkg/core/io"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"os"
 )
 
 var cfgFile string
+
+var outputHandler = core.NewOutputStdout()
 
 var rootCmd = &cobra.Command{
 	Use:   "side-projects",

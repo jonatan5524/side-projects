@@ -8,6 +8,7 @@ import (
 	util "github.com/jonatan5524/side-projects-manager/pkg/util/io"
 )
 
+//go:generate go run github.com/objectbox/objectbox-go/cmd/objectbox-gogen clean
 //go:generate go run github.com/objectbox/objectbox-go/cmd/objectbox-gogen
 
 type ParentDirectory struct {

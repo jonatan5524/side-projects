@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jonatan5524/side-projects-manager/pkg/core"
+	core "github.com/jonatan5524/side-projects-manager/pkg/core/errors"
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
 	modelMock "github.com/jonatan5524/side-projects-manager/pkg/model/mocks"
 	usecaseMock "github.com/jonatan5524/side-projects-manager/pkg/usecase/mocks"

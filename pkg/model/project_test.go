@@ -2,9 +2,12 @@ package model_test
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
+	"time"
 
-	"github.com/jonatan5524/side-projects-manager/pkg/core"
+	coreError "github.com/jonatan5524/side-projects-manager/pkg/core/errors"
+	coreIO "github.com/jonatan5524/side-projects-manager/pkg/core/io"
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
 	util "github.com/jonatan5524/side-projects-manager/pkg/util/io"
 	"github.com/jonatan5524/side-projects-manager/pkg/util/io/mocks"
@@ -37,7 +40,7 @@ func TestNewProject_ValidPath(t *testing.T) {
 
 func TestNewProject_InvalidPath(t *testing.T) {
 	path := "madeup"
-	retErr := core.NewIOError(path, util.ErrFileNotExists)
+	retErr := coreError.NewIOError(path, util.ErrFileNotExists)
 
 	mockDirectoryGetter := new(mocks.DirectoryGetter)
 	mockDirectoryGetter.On("Execute", mock.Anything).Return(nil, retErr)
@@ -46,4 +49,32 @@ func TestNewProject_InvalidPath(t *testing.T) {
 
 	assert.Equal(t, project, model.NilProject)
 	assert.ErrorIs(t, err, retErr)
+}
+
+func TestConvertProjectToTablerSlice(t *testing.T) {
+	projects := []*model.Project{
+		{
+			Name:               "project",
+			Path:               filepath.Join(os.TempDir(), "project"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: false,
+		},
+		{
+			Name:               "project2",
+			Path:               filepath.Join(os.TempDir(), "project"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: false,
+		},
+		{
+			Name:               "project3",
+			Path:               filepath.Join(os.TempDir(), "project"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: false,
+		},
+	}
+
+	tablers := model.ConvertProjectToTablerSlice(projects)
+
+	assert.IsType(t, []coreIO.Tabler{}, tablers)
+	assert.Len(t, tablers, len(projects))
 }

@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/jonatan5524/side-projects-manager/pkg/core"
+	core "github.com/jonatan5524/side-projects-manager/pkg/core/errors"
 	util "github.com/jonatan5524/side-projects-manager/pkg/util/io"
 	testingUtils "github.com/jonatan5524/side-projects-manager/pkg/util/testingUtils"
 	"github.com/stretchr/testify/assert"

@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/jonatan5524/side-projects-manager/pkg/core"
+	core "github.com/jonatan5524/side-projects-manager/pkg/core/errors"
 )
 
 var (
