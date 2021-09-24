@@ -61,12 +61,12 @@ func (project Project) String() string {
 	)
 }
 
-func (project Project) TableHeader() table.Row {
+func (Project) TableHeader() table.Row {
 	return table.Row{
 		"Name",
 		"Path",
-		"LastUpdated",
-		"HaveVersionControl",
+		"Last Updated",
+		"Have Version Control",
 	}
 }
 

@@ -6,4 +6,5 @@ import (
 
 type ParentDirectoryRepository interface {
 	Put(model.ParentDirectory) (uint64, error)
+	GetAll() ([]*model.ParentDirectory, error)
 }

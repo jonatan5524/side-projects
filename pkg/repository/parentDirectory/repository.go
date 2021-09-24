@@ -23,3 +23,13 @@ func (parentDirRepo *ParentDirectoryObjectBoxRepository) Put(parentDir model.Par
 
 	return id, nil
 }
+
+func (repo *ParentDirectoryObjectBoxRepository) GetAll() ([]*model.ParentDirectory, error) {
+	directories, err := repo.box.GetAll()
+
+	if err != nil {
+		return []*model.ParentDirectory{}, core.NewDBError("GetAll", err)
+	}
+
+	return directories, nil
+}

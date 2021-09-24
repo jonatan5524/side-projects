@@ -12,6 +12,29 @@ type ParentDirectoryUsecase struct {
 	mock.Mock
 }
 
+// GetAll provides a mock function with given fields:
+func (_m *ParentDirectoryUsecase) GetAll() ([]*model.ParentDirectory, error) {
+	ret := _m.Called()
+
+	var r0 []*model.ParentDirectory
+	if rf, ok := ret.Get(0).(func() []*model.ParentDirectory); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]*model.ParentDirectory)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Put provides a mock function with given fields: _a0
 func (_m *ParentDirectoryUsecase) Put(_a0 model.ParentDirectory) (model.ParentDirectory, error) {
 	ret := _m.Called(_a0)
