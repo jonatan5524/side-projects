@@ -10,15 +10,11 @@ import (
 
 var (
 	listProjectsCmd = &cobra.Command{
-		Use:   "list-projects",
-		Short: "list all the side projects",
-		Long:  "list all the side projects under parent directories",
+		Use:   "projects",
+		Short: "List all the side projects",
+		Long:  "List all the side projects under parent directories",
 		Run:   ListProjects,
 	}
-)
-
-const (
-	VERBOSE_FLAG = "verbose"
 )
 
 func ListProjects(cmd *cobra.Command, args []string) {
@@ -51,17 +47,17 @@ func printListProjects(service usecase.ProjectUsecase, isVerbose bool) {
 	outputHandler.PrintString("projects:")
 
 	if isVerbose {
-		printVerboseList(projects)
+		printVerboseListProjects(projects)
 	} else {
-		printNormalList(projects)
+		printNormalListProjects(projects)
 	}
 }
 
-func printVerboseList(projects []*model.Project) {
+func printVerboseListProjects(projects []*model.Project) {
 	outputHandler.PrintTable(model.ConvertProjectToTablerSlice(projects))
 }
 
-func printNormalList(projects []*model.Project) {
+func printNormalListProjects(projects []*model.Project) {
 	for _, project := range projects {
 		outputHandler.PrintString(project.Name)
 	}

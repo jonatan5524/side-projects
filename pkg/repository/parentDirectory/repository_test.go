@@ -2,6 +2,7 @@ package repository_test
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -22,4 +23,48 @@ func TestPut(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.NotNil(t, id)
+}
+
+func TestGetAll_Empty(t *testing.T) {
+	testDB := config.InitTestDB(t)
+	defer testDB.Close()
+	repo := repository.NewParentDirectoryObjectBoxRepository(testDB)
+
+	directories, err := repo.GetAll()
+
+	assert.Nil(t, err)
+	assert.Empty(t, directories)
+}
+
+func TestGetAll_Length(t *testing.T) {
+	testDB := config.InitTestDB(t)
+	defer testDB.Close()
+	const AMOUNT int = 3
+	repo := repository.NewParentDirectoryObjectBoxRepository(testDB)
+
+	expected := []model.ParentDirectory{
+		{
+			Path:        filepath.Join(os.TempDir(), "project"),
+			LastUpdated: time.Now(),
+			Projects:    []*model.Project{},
+		},
+		{
+			Path:        filepath.Join(os.TempDir(), "project"),
+			LastUpdated: time.Now(),
+			Projects:    []*model.Project{},
+		},
+		{
+			Path:        filepath.Join(os.TempDir(), "project"),
+			LastUpdated: time.Now(),
+			Projects:    []*model.Project{},
+		},
+	}
+	repo.Put(expected[0])
+	repo.Put(expected[1])
+	repo.Put(expected[2])
+
+	projects, err := repo.GetAll()
+
+	assert.Nil(t, err)
+	assert.Len(t, projects, AMOUNT)
 }

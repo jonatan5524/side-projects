@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/jedib0t/go-pretty/v6/table"
+	core "github.com/jonatan5524/side-projects-manager/pkg/core/io"
 	util "github.com/jonatan5524/side-projects-manager/pkg/util/io"
 )
 
@@ -60,7 +62,7 @@ func (parentDir *ParentDirectory) LoadProjects() error {
 	return nil
 }
 
-func (parentDir *ParentDirectory) String() string {
+func (parentDir ParentDirectory) String() string {
 	return fmt.Sprintf(`ParentDirectory {
 	Id: %d
 	Path: %s
@@ -72,4 +74,30 @@ func (parentDir *ParentDirectory) String() string {
 		parentDir.LastUpdated,
 		parentDir.Projects,
 	)
+}
+
+func (ParentDirectory) TableHeader() table.Row {
+	return table.Row{
+		"Path",
+		"Last Updated",
+		"Number of projects",
+	}
+}
+
+func (dir ParentDirectory) TableData() table.Row {
+	return table.Row{
+		dir.Path,
+		dir.LastUpdated,
+		len(dir.Projects),
+	}
+}
+
+func ConvertParentDirectoryToTablerSlice(dirs []*ParentDirectory) []core.Tabler {
+	tablers := []core.Tabler{}
+
+	for _, dir := range dirs {
+		tablers = append(tablers, dir)
+	}
+
+	return tablers
 }

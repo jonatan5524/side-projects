@@ -24,3 +24,7 @@ func (service *ParentDirectoryService) Put(parentDir model.ParentDirectory) (mod
 
 	return parentDir, nil
 }
+
+func (service *ParentDirectoryService) GetAll() ([]*model.ParentDirectory, error) {
+	return service.repository.GetAll()
+}

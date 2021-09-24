@@ -13,23 +13,23 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func TestPrintListProjects_NotVerbose(t *testing.T) {
-	mockService := new(usecaseMocks.ProjectUsecase)
-	mockService.On("GetAll").Return([]*model.Project{}, nil)
+func TestPrintListDirectories_NotVerbose(t *testing.T) {
+	mockService := new(usecaseMocks.ParentDirectoryUsecase)
+	mockService.On("GetAll").Return([]*model.ParentDirectory{}, nil)
 	mockOutputHandler := new(coreMocks.OutputHandler)
 	mockOutputHandler.On("PrintString", mock.Anything).Return()
 	defer func() { outputHandler = core.NewOutputStdout() }()
 
 	outputHandler = mockOutputHandler
 
-	printListProjects(mockService, false)
+	printListDirectories(mockService, false)
 
 	mockOutputHandler.AssertNotCalled(t, "PrintTable")
 }
 
-func TestPrintListProjects_Verbose(t *testing.T) {
-	mockService := new(usecaseMocks.ProjectUsecase)
-	mockService.On("GetAll").Return([]*model.Project{}, nil)
+func TestPrintListDirectories_Verbose(t *testing.T) {
+	mockService := new(usecaseMocks.ParentDirectoryUsecase)
+	mockService.On("GetAll").Return([]*model.ParentDirectory{}, nil)
 	mockOutputHandler := new(coreMocks.OutputHandler)
 	mockOutputHandler.On("PrintString", mock.Anything).Return()
 	mockOutputHandler.On("PrintTable", []core.Tabler{}).Return()
@@ -37,30 +37,27 @@ func TestPrintListProjects_Verbose(t *testing.T) {
 
 	outputHandler = mockOutputHandler
 
-	printListProjects(mockService, true)
+	printListDirectories(mockService, true)
 
 	mockOutputHandler.AssertCalled(t, "PrintTable", []core.Tabler{})
 }
 
-func TestPrintNormalList(t *testing.T) {
-	projects := []*model.Project{
+func TestPrintNormalListDirectories(t *testing.T) {
+	directories := []*model.ParentDirectory{
 		{
-			Name:               "project",
-			Path:               filepath.Join(os.TempDir(), "project"),
-			LastUpdated:        time.Now(),
-			HaveVersionControl: false,
+			Path:        filepath.Join(os.TempDir(), "project"),
+			LastUpdated: time.Now(),
+			Projects:    []*model.Project{},
 		},
 		{
-			Name:               "project2",
-			Path:               filepath.Join(os.TempDir(), "project"),
-			LastUpdated:        time.Now(),
-			HaveVersionControl: false,
+			Path:        filepath.Join(os.TempDir(), "project"),
+			LastUpdated: time.Now(),
+			Projects:    []*model.Project{},
 		},
 		{
-			Name:               "project3",
-			Path:               filepath.Join(os.TempDir(), "project"),
-			LastUpdated:        time.Now(),
-			HaveVersionControl: false,
+			Path:        filepath.Join(os.TempDir(), "project"),
+			LastUpdated: time.Now(),
+			Projects:    []*model.Project{},
 		},
 	}
 	mockOutputHandler := new(coreMocks.OutputHandler)
@@ -69,7 +66,7 @@ func TestPrintNormalList(t *testing.T) {
 
 	outputHandler = mockOutputHandler
 
-	printNormalList(projects)
+	printNormalListDirectories(directories)
 
-	mockOutputHandler.AssertNumberOfCalls(t, "PrintString", len(projects))
+	mockOutputHandler.AssertNumberOfCalls(t, "PrintString", len(directories))
 }
