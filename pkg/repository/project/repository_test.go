@@ -7,6 +7,7 @@ import (
 	"time"
 
 	config "github.com/jonatan5524/side-projects-manager/pkg/config/db"
+	core "github.com/jonatan5524/side-projects-manager/pkg/core/errors"
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
 	repository "github.com/jonatan5524/side-projects-manager/pkg/repository/project"
 	"github.com/stretchr/testify/assert"
@@ -74,4 +75,75 @@ func TestGetAll_Length(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Len(t, projects, AMOUNT)
+}
+
+func TestDeleteMany_NotFound(t *testing.T) {
+	testDB := config.InitTestDB(t)
+	defer testDB.Close()
+	repo := repository.NewProjectObjectBoxRepository(testDB)
+
+	projects := []*model.Project{
+		{
+			Name:               "project",
+			Path:               filepath.Join(os.TempDir(), "project"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: false,
+		},
+		{
+			Name:               "project2",
+			Path:               filepath.Join(os.TempDir(), "project"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: false,
+		},
+		{
+			Name:               "project3",
+			Path:               filepath.Join(os.TempDir(), "project"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: false,
+		},
+	}
+
+	err := repo.DeleteMany(projects...)
+
+	assert.IsType(t, err, &core.DBError{})
+}
+func TestDeleteMany_Found(t *testing.T) {
+	testDB := config.InitTestDB(t)
+	defer testDB.Close()
+	repo := repository.NewProjectObjectBoxRepository(testDB)
+
+	projects := []*model.Project{
+		{
+			Name:               "project",
+			Path:               filepath.Join(os.TempDir(), "project"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: false,
+		},
+		{
+			Name:               "project2",
+			Path:               filepath.Join(os.TempDir(), "project"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: false,
+		},
+		{
+			Name:               "project3",
+			Path:               filepath.Join(os.TempDir(), "project"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: false,
+		},
+	}
+	id, _ := repo.Put(*projects[0])
+	projects[0].Id = id
+	id, _ = repo.Put(*projects[1])
+	projects[1].Id = id
+	id, _ = repo.Put(*projects[2])
+	projects[2].Id = id
+
+	err := repo.DeleteMany(projects...)
+
+	assert.Nil(t, err)
+
+	projects, _ = repo.GetAll()
+
+	assert.Empty(t, projects)
 }

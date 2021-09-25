@@ -15,7 +15,7 @@ import (
 
 type ParentDirectory struct {
 	Id          uint64
-	Path        string
+	Path        string    `objectbox"unique"`
 	LastUpdated time.Time `objectbox:"date"`
 	Projects    []*Project
 }

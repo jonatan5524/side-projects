@@ -2,10 +2,12 @@ package model_test
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
-	core "github.com/jonatan5524/side-projects-manager/pkg/core/errors"
+	coreErrors "github.com/jonatan5524/side-projects-manager/pkg/core/errors"
+	coreIO "github.com/jonatan5524/side-projects-manager/pkg/core/io"
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
 	util "github.com/jonatan5524/side-projects-manager/pkg/util/io"
 	"github.com/jonatan5524/side-projects-manager/pkg/util/io/mocks"
@@ -34,7 +36,7 @@ func TestNewParentDirectory_ValidPath(t *testing.T) {
 
 func TestNewParentDirectory_InvalidPath(t *testing.T) {
 	path := "madeup"
-	retErr := core.NewIOError(path, util.ErrFileNotExists)
+	retErr := coreErrors.NewIOError(path, util.ErrFileNotExists)
 
 	mockDirectoryGetter := new(mocks.DirectoryGetter)
 	mockDirectoryGetter.On("Execute", mock.Anything).Return(nil, retErr)
@@ -81,4 +83,29 @@ func TestPut_WithDirs(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Len(t, parentDir.Projects, AMOUNT)
+}
+
+func TestConvertParentDirectoryToTablerSlice(t *testing.T) {
+	dirs := []*model.ParentDirectory{
+		{
+			Path:        filepath.Join(os.TempDir(), "project"),
+			LastUpdated: time.Now(),
+			Projects:    []*model.Project{},
+		},
+		{
+			Path:        filepath.Join(os.TempDir(), "project"),
+			LastUpdated: time.Now(),
+			Projects:    []*model.Project{},
+		},
+		{
+			Path:        filepath.Join(os.TempDir(), "project"),
+			LastUpdated: time.Now(),
+			Projects:    []*model.Project{},
+		},
+	}
+
+	tablers := model.ConvertParentDirectoryToTablerSlice(dirs)
+
+	assert.IsType(t, []coreIO.Tabler{}, tablers)
+	assert.Len(t, tablers, len(dirs))
 }

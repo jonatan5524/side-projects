@@ -44,12 +44,16 @@ func printListProjects(service usecase.ProjectUsecase, isVerbose bool) {
 		panic(err)
 	}
 
-	outputHandler.PrintString("projects:")
-
-	if isVerbose {
-		printVerboseListProjects(projects)
+	if len(projects) == 0 {
+		outputHandler.PrintString("you don't have side projects,\nmaybe you have not assign directories\nto assign directory use add-dir command.")
 	} else {
-		printNormalListProjects(projects)
+		outputHandler.PrintString("projects:")
+
+		if isVerbose {
+			printVerboseListProjects(projects)
+		} else {
+			printNormalListProjects(projects)
+		}
 	}
 }
 

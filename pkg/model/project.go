@@ -16,7 +16,7 @@ import (
 type Project struct {
 	Id                 uint64
 	Name               string
-	Path               string
+	Path               string    `objectbox"unique"`
 	LastUpdated        time.Time `objectbox:"date"`
 	HaveVersionControl bool
 }

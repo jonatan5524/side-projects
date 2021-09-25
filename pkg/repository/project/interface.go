@@ -7,4 +7,5 @@ import (
 type ProjectRepository interface {
 	GetAll() ([]*model.Project, error)
 	Put(model.Project) (uint64, error)
+	DeleteMany(...*model.Project) error
 }

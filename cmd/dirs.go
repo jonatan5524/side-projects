@@ -42,12 +42,16 @@ func printListDirectories(service usecase.ParentDirectoryUsecase, isVerbose bool
 		panic(err)
 	}
 
-	outputHandler.PrintString("directories:")
-
-	if isVerbose {
-		printVerboseListDirectories(directories)
+	if len(directories) == 0 {
+		outputHandler.PrintString("you don't have directories assign\nto assign directory use add-dir command")
 	} else {
-		printNormalListDirectories(directories)
+		outputHandler.PrintString("directories:")
+
+		if isVerbose {
+			printVerboseListDirectories(directories)
+		} else {
+			printNormalListDirectories(directories)
+		}
 	}
 }
 

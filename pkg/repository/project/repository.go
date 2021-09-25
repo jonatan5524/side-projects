@@ -33,3 +33,13 @@ func (repo *ProjectObjectBoxRepository) Put(project model.Project) (uint64, erro
 
 	return id, nil
 }
+
+func (repo *ProjectObjectBoxRepository) DeleteMany(projects ...*model.Project) error {
+	_, err := repo.box.RemoveMany(projects...)
+
+	if err != nil {
+		return core.NewDBError("RemoveMany", err)
+	}
+
+	return nil
+}
