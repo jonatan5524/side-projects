@@ -12,6 +12,11 @@ type OutputHandler interface {
 	PrintTable([]Tabler)
 }
 
+type TerminalObject interface {
+	fmt.Stringer
+	Tabler
+}
+
 type Tabler interface {
 	TableHeader() table.Row
 	TableData() table.Row

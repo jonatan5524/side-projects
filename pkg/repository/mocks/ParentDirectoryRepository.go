@@ -12,6 +12,34 @@ type ParentDirectoryRepository struct {
 	mock.Mock
 }
 
+// Delete provides a mock function with given fields: _a0
+func (_m *ParentDirectoryRepository) Delete(_a0 model.ParentDirectory) error {
+	ret := _m.Called(_a0)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(model.ParentDirectory) error); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// DeleteByPath provides a mock function with given fields: _a0
+func (_m *ParentDirectoryRepository) DeleteByPath(_a0 string) error {
+	ret := _m.Called(_a0)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetAll provides a mock function with given fields:
 func (_m *ParentDirectoryRepository) GetAll() ([]*model.ParentDirectory, error) {
 	ret := _m.Called()

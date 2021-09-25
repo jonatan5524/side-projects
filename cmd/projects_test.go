@@ -28,18 +28,38 @@ func TestPrintListProjects_NotVerbose(t *testing.T) {
 }
 
 func TestPrintListProjects_Verbose(t *testing.T) {
+	projects := []*model.Project{
+		{
+			Name:               "project",
+			Path:               filepath.Join(os.TempDir(), "project"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: false,
+		},
+		{
+			Name:               "project2",
+			Path:               filepath.Join(os.TempDir(), "project"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: false,
+		},
+		{
+			Name:               "project3",
+			Path:               filepath.Join(os.TempDir(), "project"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: false,
+		},
+	}
 	mockService := new(usecaseMocks.ProjectUsecase)
-	mockService.On("GetAll").Return([]*model.Project{}, nil)
+	mockService.On("GetAll").Return(projects, nil)
 	mockOutputHandler := new(coreMocks.OutputHandler)
 	mockOutputHandler.On("PrintString", mock.Anything).Return()
-	mockOutputHandler.On("PrintTable", []core.Tabler{}).Return()
+	mockOutputHandler.On("PrintTable", mock.Anything).Return()
 	defer func() { outputHandler = core.NewOutputStdout() }()
 
 	outputHandler = mockOutputHandler
 
 	printListProjects(mockService, true)
 
-	mockOutputHandler.AssertCalled(t, "PrintTable", []core.Tabler{})
+	mockOutputHandler.AssertNumberOfCalls(t, "PrintTable", 1)
 }
 
 func TestPrintNormalListProjects(t *testing.T) {

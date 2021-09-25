@@ -13,7 +13,7 @@ func NewParentDirectoryService(repo repository.ParentDirectoryRepository) Parent
 	return &ParentDirectoryService{repo}
 }
 
-func (service *ParentDirectoryService) Put(parentDir model.ParentDirectory) (model.ParentDirectory, error) {
+func (service ParentDirectoryService) Put(parentDir model.ParentDirectory) (model.ParentDirectory, error) {
 	id, err := service.repository.Put(parentDir)
 
 	if err != nil {
@@ -25,6 +25,14 @@ func (service *ParentDirectoryService) Put(parentDir model.ParentDirectory) (mod
 	return parentDir, nil
 }
 
-func (service *ParentDirectoryService) GetAll() ([]*model.ParentDirectory, error) {
+func (service ParentDirectoryService) GetAll() ([]*model.ParentDirectory, error) {
 	return service.repository.GetAll()
+}
+
+func (service ParentDirectoryService) DeleteByPath(path string) error {
+	return service.repository.DeleteByPath(path)
+}
+
+func (service ParentDirectoryService) Delete(dir model.ParentDirectory) error {
+	return service.repository.Delete(dir)
 }

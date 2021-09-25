@@ -14,8 +14,25 @@ import (
 )
 
 func TestPrintListDirectories_NotVerbose(t *testing.T) {
+	directories := []*model.ParentDirectory{
+		{
+			Path:        filepath.Join(os.TempDir(), "project"),
+			LastUpdated: time.Now(),
+			Projects:    []*model.Project{},
+		},
+		{
+			Path:        filepath.Join(os.TempDir(), "project"),
+			LastUpdated: time.Now(),
+			Projects:    []*model.Project{},
+		},
+		{
+			Path:        filepath.Join(os.TempDir(), "project"),
+			LastUpdated: time.Now(),
+			Projects:    []*model.Project{},
+		},
+	}
 	mockService := new(usecaseMocks.ParentDirectoryUsecase)
-	mockService.On("GetAll").Return([]*model.ParentDirectory{}, nil)
+	mockService.On("GetAll").Return(directories, nil)
 	mockOutputHandler := new(coreMocks.OutputHandler)
 	mockOutputHandler.On("PrintString", mock.Anything).Return()
 	defer func() { outputHandler = core.NewOutputStdout() }()
@@ -28,18 +45,35 @@ func TestPrintListDirectories_NotVerbose(t *testing.T) {
 }
 
 func TestPrintListDirectories_Verbose(t *testing.T) {
+	directories := []*model.ParentDirectory{
+		{
+			Path:        filepath.Join(os.TempDir(), "project"),
+			LastUpdated: time.Now(),
+			Projects:    []*model.Project{},
+		},
+		{
+			Path:        filepath.Join(os.TempDir(), "project"),
+			LastUpdated: time.Now(),
+			Projects:    []*model.Project{},
+		},
+		{
+			Path:        filepath.Join(os.TempDir(), "project"),
+			LastUpdated: time.Now(),
+			Projects:    []*model.Project{},
+		},
+	}
 	mockService := new(usecaseMocks.ParentDirectoryUsecase)
-	mockService.On("GetAll").Return([]*model.ParentDirectory{}, nil)
+	mockService.On("GetAll").Return(directories, nil)
 	mockOutputHandler := new(coreMocks.OutputHandler)
 	mockOutputHandler.On("PrintString", mock.Anything).Return()
-	mockOutputHandler.On("PrintTable", []core.Tabler{}).Return()
+	mockOutputHandler.On("PrintTable", mock.Anything).Return()
 	defer func() { outputHandler = core.NewOutputStdout() }()
 
 	outputHandler = mockOutputHandler
 
 	printListDirectories(mockService, true)
 
-	mockOutputHandler.AssertCalled(t, "PrintTable", []core.Tabler{})
+	mockOutputHandler.AssertNumberOfCalls(t, "PrintTable", 1)
 }
 
 func TestPrintNormalListDirectories(t *testing.T) {
