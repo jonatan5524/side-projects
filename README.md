@@ -47,3 +47,4 @@ Available commands:
 | `add-dir` | Adding directory of side projects. |
 | `projects` | List all the side projects. |
 | `dirs` | List all the directories. |
+| `delete-dir` | Delete directory of side projects. |
