@@ -72,7 +72,11 @@ func (repo ParentDirectoryObjectBoxRepository) DeleteByPath(path string) error {
 		return err
 	}
 
-	repo.projectRepo.DeleteMany(dir[0].Projects...)
+	err = repo.projectRepo.DeleteMany(dir[0].Projects...)
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

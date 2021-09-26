@@ -6,15 +6,15 @@ import (
 )
 
 var deleteDirCmd = &cobra.Command{
-	Use:   "delete-dir",
-	Short: "Deleting an assign directory with his path",
-	Long:  "Deleting an assign directory with his path",
+	Use:   "delete-dir [path of directory]",
+	Short: "Deleting an assign directory with his path (not deleting from file system)",
+	Long:  "Deleting an assign directory with his path (not deleting from file system)",
 	Run:   DeleteDirectoryCMD,
 }
 
 func DeleteDirectoryCMD(cmd *cobra.Command, args []string) {
 	if args[0] == "" {
-		panic("path not added")
+		panic("path not provided")
 	}
 
 	db := initDB()

@@ -12,6 +12,54 @@ type ProjectRepository struct {
 	mock.Mock
 }
 
+// Delete provides a mock function with given fields: _a0
+func (_m *ProjectRepository) Delete(_a0 model.Project) error {
+	ret := _m.Called(_a0)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(model.Project) error); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// DeleteByPath provides a mock function with given fields: _a0
+func (_m *ProjectRepository) DeleteByPath(_a0 string) error {
+	ret := _m.Called(_a0)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// DeleteMany provides a mock function with given fields: _a0
+func (_m *ProjectRepository) DeleteMany(_a0 ...*model.Project) error {
+	_va := make([]interface{}, len(_a0))
+	for _i := range _a0 {
+		_va[_i] = _a0[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(...*model.Project) error); ok {
+		r0 = rf(_a0...)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetAll provides a mock function with given fields:
 func (_m *ProjectRepository) GetAll() ([]*model.Project, error) {
 	ret := _m.Called()

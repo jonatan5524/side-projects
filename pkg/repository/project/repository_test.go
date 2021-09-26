@@ -191,3 +191,34 @@ func TestDeleteMany_Found(t *testing.T) {
 
 	assert.Empty(t, projects)
 }
+
+func TestDeleteByPath_NotFound(t *testing.T) {
+	t.Cleanup(cleanDB)
+
+	repo := repository.NewProjectObjectBoxRepository(testDB)
+
+	path := filepath.Join(os.TempDir(), "project")
+
+	err := repo.DeleteByPath(path)
+
+	assert.IsType(t, err, &core.DBError{})
+}
+
+func TestDeleteByPath_Found(t *testing.T) {
+	t.Cleanup(cleanDB)
+	defer testDB.Close()
+	const AMOUNT int = 3
+	repo := repository.NewProjectObjectBoxRepository(testDB)
+
+	project := model.Project{
+		Name:        "project",
+		Path:        filepath.Join(os.TempDir(), "project"),
+		LastUpdated: time.Now(),
+	}
+
+	repo.Put(project)
+
+	err := repo.DeleteByPath(project.Path)
+
+	assert.Nil(t, err)
+}
