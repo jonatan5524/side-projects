@@ -44,9 +44,9 @@ side-project-manager [command] --help
 Available commands:
 | command name | description |
 |---|---|
-| `add-dir` | Adding directory of side projects. |
+| `add-dir [path]` | Adding directory of side projects. |
 | `projects` | List all the side projects. |
 | `dirs` | List all the directories. |
-| `delete-dir` | Delete directory of side projects from track (not from file system). |
-| `delete-project` | Delete side project from track (not from file system). |
+| `delete-dir [path]` | Delete directory of side projects from track (not from file system). |
+| `delete-project [path]` | Delete side project from track (not from file system). |
 
