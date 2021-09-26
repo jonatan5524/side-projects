@@ -9,7 +9,7 @@ var deleteProjectCmd = &cobra.Command{
 	Use:   "delete-project [path of project]",
 	Short: "Deleting an assign project with his path (not deleting from file system)",
 	Long:  "Deleting an assign project with his path (not deleting from file system)",
-	Run:   DeleteDirectoryCMD,
+	Run:   DeleteProjectCMD,
 }
 
 func DeleteProjectCMD(cmd *cobra.Command, args []string) {
