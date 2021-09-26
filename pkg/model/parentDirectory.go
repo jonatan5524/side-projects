@@ -14,8 +14,8 @@ import (
 //go:generate go run github.com/objectbox/objectbox-go/cmd/objectbox-gogen
 
 type ParentDirectory struct {
-	Id          uint64
-	Path        string    `objectbox"unique"`
+	Id          uint64    `objectbox:"id"`
+	Path        string    `objectbox:"unique"`
 	LastUpdated time.Time `objectbox:"date"`
 	Projects    []*Project
 }

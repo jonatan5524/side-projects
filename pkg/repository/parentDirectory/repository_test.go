@@ -10,12 +10,32 @@ import (
 	core "github.com/jonatan5524/side-projects-manager/pkg/core/errors"
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
 	repository "github.com/jonatan5524/side-projects-manager/pkg/repository/parentDirectory"
+	"github.com/objectbox/objectbox-go/objectbox"
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	testDB *objectbox.ObjectBox = nil
+	dbPath string               = ""
+)
+
+func TestMain(m *testing.M) {
+	testDB, dbPath = config.InitTestDB()
+
+	code := m.Run()
+
+	os.Exit(code)
+}
+
+func cleanDB() {
+	testDB.Close()
+	os.RemoveAll(dbPath)
+
+	testDB, dbPath = config.InitTestDB()
+}
+
 func TestPut(t *testing.T) {
-	testDB := config.InitTestDB(t)
-	defer testDB.Close()
+	t.Cleanup(cleanDB)
 
 	repo := repository.NewParentDirectoryObjectBoxRepository(testDB)
 	parentDir := model.ParentDirectory{Path: os.TempDir(), LastUpdated: time.Now(), Projects: []*model.Project{}}
@@ -26,9 +46,24 @@ func TestPut(t *testing.T) {
 	assert.NotNil(t, id)
 }
 
+func TestPut_Duplicate(t *testing.T) {
+	t.Cleanup(cleanDB)
+
+	repo := repository.NewParentDirectoryObjectBoxRepository(testDB)
+	parentDir := model.ParentDirectory{Path: os.TempDir(), LastUpdated: time.Now(), Projects: []*model.Project{}}
+	parentDirDuplicate := model.ParentDirectory{Path: os.TempDir(), LastUpdated: time.Now(), Projects: []*model.Project{}}
+
+	id, err := repo.Put(parentDir)
+	assert.Nil(t, err)
+	assert.NotNil(t, id)
+
+	id, err = repo.Put(parentDirDuplicate)
+	assert.NotNil(t, err)
+}
+
 func TestGetAll_Empty(t *testing.T) {
-	testDB := config.InitTestDB(t)
-	defer testDB.Close()
+	t.Cleanup(cleanDB)
+
 	repo := repository.NewParentDirectoryObjectBoxRepository(testDB)
 
 	directories, err := repo.GetAll()
@@ -38,8 +73,8 @@ func TestGetAll_Empty(t *testing.T) {
 }
 
 func TestGetAll_Length(t *testing.T) {
-	testDB := config.InitTestDB(t)
-	defer testDB.Close()
+	t.Cleanup(cleanDB)
+
 	const AMOUNT int = 3
 	repo := repository.NewParentDirectoryObjectBoxRepository(testDB)
 
@@ -50,12 +85,12 @@ func TestGetAll_Length(t *testing.T) {
 			Projects:    []*model.Project{},
 		},
 		{
-			Path:        filepath.Join(os.TempDir(), "project"),
+			Path:        filepath.Join(os.TempDir(), "project2"),
 			LastUpdated: time.Now(),
 			Projects:    []*model.Project{},
 		},
 		{
-			Path:        filepath.Join(os.TempDir(), "project"),
+			Path:        filepath.Join(os.TempDir(), "project3"),
 			LastUpdated: time.Now(),
 			Projects:    []*model.Project{},
 		},
@@ -71,8 +106,8 @@ func TestGetAll_Length(t *testing.T) {
 }
 
 func TestDelete_NotFound(t *testing.T) {
-	testDB := config.InitTestDB(t)
-	defer testDB.Close()
+	t.Cleanup(cleanDB)
+
 	repo := repository.NewParentDirectoryObjectBoxRepository(testDB)
 
 	dir := model.ParentDirectory{
@@ -87,8 +122,8 @@ func TestDelete_NotFound(t *testing.T) {
 }
 
 func TestDelete_Found(t *testing.T) {
-	testDB := config.InitTestDB(t)
-	defer testDB.Close()
+	t.Cleanup(cleanDB)
+
 	repo := repository.NewParentDirectoryObjectBoxRepository(testDB)
 
 	dir := model.ParentDirectory{
@@ -106,8 +141,8 @@ func TestDelete_Found(t *testing.T) {
 }
 
 func TestDeleteByPath_NotFound(t *testing.T) {
-	testDB := config.InitTestDB(t)
-	defer testDB.Close()
+	t.Cleanup(cleanDB)
+
 	repo := repository.NewParentDirectoryObjectBoxRepository(testDB)
 
 	path := filepath.Join(os.TempDir(), "project")
@@ -118,7 +153,7 @@ func TestDeleteByPath_NotFound(t *testing.T) {
 }
 
 func TestDeleteByPath_Found(t *testing.T) {
-	testDB := config.InitTestDB(t)
+	t.Cleanup(cleanDB)
 	defer testDB.Close()
 	const AMOUNT int = 3
 	repo := repository.NewParentDirectoryObjectBoxRepository(testDB)

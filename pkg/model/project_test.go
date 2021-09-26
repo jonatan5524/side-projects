@@ -40,7 +40,7 @@ func TestNewProject_ValidPath(t *testing.T) {
 
 func TestNewProject_InvalidPath(t *testing.T) {
 	path := "madeup"
-	retErr := coreError.NewIOError(path, util.ErrFileNotExists)
+	retErr := coreError.NewIOError(path, util.ERR_FILE_NOT_EXISTS)
 
 	mockDirectoryGetter := new(mocks.DirectoryGetter)
 	mockDirectoryGetter.On("Execute", mock.Anything).Return(nil, retErr)

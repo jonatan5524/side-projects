@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	config "github.com/jonatan5524/side-projects-manager/pkg/config/db"
-	repository "github.com/jonatan5524/side-projects-manager/pkg/repository/parentDirectory"
 	usecase "github.com/jonatan5524/side-projects-manager/pkg/usecase/parentDirectory"
 	"github.com/spf13/cobra"
 )
@@ -19,15 +17,10 @@ func DeleteDirectoryCMD(cmd *cobra.Command, args []string) {
 		panic("path not added")
 	}
 
-	db, err := config.InitDB()
-
-	if err != nil {
-		panic(err)
-	}
+	db := initDB()
 	defer db.Close()
 
-	repository := repository.NewParentDirectoryObjectBoxRepository(db)
-	service := usecase.NewParentDirectoryService(repository)
+	service := initParentDirectoryUsecase(db)
 
 	deleteDirectory(service, args[0])
 }

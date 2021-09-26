@@ -10,12 +10,32 @@ import (
 	core "github.com/jonatan5524/side-projects-manager/pkg/core/errors"
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
 	repository "github.com/jonatan5524/side-projects-manager/pkg/repository/project"
+	"github.com/objectbox/objectbox-go/objectbox"
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	testDB *objectbox.ObjectBox = nil
+	dbPath string               = ""
+)
+
+func TestMain(m *testing.M) {
+	testDB, dbPath = config.InitTestDB()
+
+	code := m.Run()
+
+	os.Exit(code)
+}
+
+func cleanDB() {
+	testDB.Close()
+	os.RemoveAll(dbPath)
+
+	testDB, dbPath = config.InitTestDB()
+}
+
 func TestPut(t *testing.T) {
-	testDB := config.InitTestDB(t)
-	defer testDB.Close()
+	t.Cleanup(cleanDB)
 
 	repo := repository.NewProjectObjectBoxRepository(testDB)
 	project := model.Project{
@@ -30,9 +50,32 @@ func TestPut(t *testing.T) {
 	assert.NotNil(t, id)
 }
 
+func TestPut_Duplicate(t *testing.T) {
+	t.Cleanup(cleanDB)
+
+	repo := repository.NewProjectObjectBoxRepository(testDB)
+	project := model.Project{
+		Name:        "project",
+		Path:        filepath.Join(os.TempDir(), "project"),
+		LastUpdated: time.Now(),
+	}
+	projectSecond := model.Project{
+		Name:        "project",
+		Path:        filepath.Join(os.TempDir(), "project"),
+		LastUpdated: time.Now(),
+	}
+
+	id, err := repo.Put(project)
+	assert.Nil(t, err)
+	assert.NotNil(t, id)
+
+	_, err = repo.Put(projectSecond)
+	assert.NotNil(t, err)
+}
+
 func TestGetAll_Empty(t *testing.T) {
-	testDB := config.InitTestDB(t)
-	defer testDB.Close()
+	t.Cleanup(cleanDB)
+
 	repo := repository.NewProjectObjectBoxRepository(testDB)
 
 	projects, err := repo.GetAll()
@@ -42,8 +85,8 @@ func TestGetAll_Empty(t *testing.T) {
 }
 
 func TestGetAll_Length(t *testing.T) {
-	testDB := config.InitTestDB(t)
-	defer testDB.Close()
+	t.Cleanup(cleanDB)
+
 	const AMOUNT int = 3
 	repo := repository.NewProjectObjectBoxRepository(testDB)
 
@@ -56,13 +99,13 @@ func TestGetAll_Length(t *testing.T) {
 		},
 		{
 			Name:               "project2",
-			Path:               filepath.Join(os.TempDir(), "project"),
+			Path:               filepath.Join(os.TempDir(), "project2"),
 			LastUpdated:        time.Now(),
 			HaveVersionControl: false,
 		},
 		{
 			Name:               "project3",
-			Path:               filepath.Join(os.TempDir(), "project"),
+			Path:               filepath.Join(os.TempDir(), "project3"),
 			LastUpdated:        time.Now(),
 			HaveVersionControl: false,
 		},
@@ -78,8 +121,8 @@ func TestGetAll_Length(t *testing.T) {
 }
 
 func TestDeleteMany_NotFound(t *testing.T) {
-	testDB := config.InitTestDB(t)
-	defer testDB.Close()
+	t.Cleanup(cleanDB)
+
 	repo := repository.NewProjectObjectBoxRepository(testDB)
 
 	projects := []*model.Project{
@@ -107,9 +150,10 @@ func TestDeleteMany_NotFound(t *testing.T) {
 
 	assert.IsType(t, err, &core.DBError{})
 }
+
 func TestDeleteMany_Found(t *testing.T) {
-	testDB := config.InitTestDB(t)
-	defer testDB.Close()
+	t.Cleanup(cleanDB)
+
 	repo := repository.NewProjectObjectBoxRepository(testDB)
 
 	projects := []*model.Project{
@@ -121,13 +165,13 @@ func TestDeleteMany_Found(t *testing.T) {
 		},
 		{
 			Name:               "project2",
-			Path:               filepath.Join(os.TempDir(), "project"),
+			Path:               filepath.Join(os.TempDir(), "project2"),
 			LastUpdated:        time.Now(),
 			HaveVersionControl: false,
 		},
 		{
 			Name:               "project3",
-			Path:               filepath.Join(os.TempDir(), "project"),
+			Path:               filepath.Join(os.TempDir(), "project3"),
 			LastUpdated:        time.Now(),
 			HaveVersionControl: false,
 		},
