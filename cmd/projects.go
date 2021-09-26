@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	config "github.com/jonatan5524/side-projects-manager/pkg/config/db"
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
-	repository "github.com/jonatan5524/side-projects-manager/pkg/repository/project"
 	usecase "github.com/jonatan5524/side-projects-manager/pkg/usecase/project"
 	"github.com/spf13/cobra"
 )
@@ -18,23 +16,23 @@ var (
 )
 
 func ListProjects(cmd *cobra.Command, args []string) {
-	db, err := config.InitDB()
-
-	if err != nil {
-		panic(err)
-	}
+	db := initDB()
 	defer db.Close()
 
-	repository := repository.NewProjectObjectBoxRepository(db)
-	service := usecase.NewProjectService(repository)
+	isVerbose := parseListProjectsFlags(cmd)
+	service := initProjectUsecase(db)
 
+	printListProjects(service, isVerbose)
+}
+
+func parseListProjectsFlags(cmd *cobra.Command) bool {
 	isVerbose, err := cmd.Flags().GetBool(VERBOSE_FLAG)
 
 	if err != nil {
 		panic(err)
 	}
 
-	printListProjects(service, isVerbose)
+	return isVerbose
 }
 
 func printListProjects(service usecase.ProjectUsecase, isVerbose bool) {

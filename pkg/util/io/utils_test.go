@@ -22,7 +22,7 @@ func TestGetDirectory_DirectoryExists(t *testing.T) {
 
 func TestGetDirectory_PathNotExists(t *testing.T) {
 	path := "/MadeUpPath"
-	expectedError := core.NewIOError(path, util.ErrFileNotExists)
+	expectedError := core.NewIOError(path, util.ERR_FILE_NOT_EXISTS)
 
 	directory, err := util.GetDirectory("/MadeUpPath")
 
@@ -33,7 +33,7 @@ func TestGetDirectory_PathNotExists(t *testing.T) {
 func TestGetDirectory_DirectoryIsFile(t *testing.T) {
 	tempFilePath := testingUtils.CreateTempFile(t)
 	defer os.Remove(tempFilePath)
-	expectedError := core.NewIOError(tempFilePath, util.ErrDirInvalidType)
+	expectedError := core.NewIOError(tempFilePath, util.ERR_DIR_INVALID_TYPE)
 
 	directory, err := util.GetDirectory(tempFilePath)
 
@@ -100,7 +100,7 @@ func TestListDirectory_PathNotExists(t *testing.T) {
 	filterMethodTrue := func(os.FileInfo) bool {
 		return true
 	}
-	expectedError := core.NewIOError(path, util.ErrFileNotExists)
+	expectedError := core.NewIOError(path, util.ERR_FILE_NOT_EXISTS)
 
 	directories, err := util.ListDirectory(path, filterMethodTrue)
 

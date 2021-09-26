@@ -40,7 +40,7 @@ func TestAddParentDirectoryToDB_Success(t *testing.T) {
 
 func TestAddParentDirectoryToDB_InvalidPath(t *testing.T) {
 	path := "/madeUp"
-	expectedError := core.NewIOError(path, util.ErrFileNotExists)
+	expectedError := core.NewIOError(path, util.ERR_FILE_NOT_EXISTS)
 
 	mockParentDirCtor := new(modelMock.ParentDirectoryConstructor)
 	mockParentDirCtor.On("Execute", mock.Anything, mock.Anything).Return(model.NilParentDirectory, expectedError)

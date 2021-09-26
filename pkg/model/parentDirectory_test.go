@@ -36,7 +36,7 @@ func TestNewParentDirectory_ValidPath(t *testing.T) {
 
 func TestNewParentDirectory_InvalidPath(t *testing.T) {
 	path := "madeup"
-	retErr := coreErrors.NewIOError(path, util.ErrFileNotExists)
+	retErr := coreErrors.NewIOError(path, util.ERR_FILE_NOT_EXISTS)
 
 	mockDirectoryGetter := new(mocks.DirectoryGetter)
 	mockDirectoryGetter.On("Execute", mock.Anything).Return(nil, retErr)

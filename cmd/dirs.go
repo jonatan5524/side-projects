@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	config "github.com/jonatan5524/side-projects-manager/pkg/config/db"
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
-	repository "github.com/jonatan5524/side-projects-manager/pkg/repository/parentDirectory"
 	usecase "github.com/jonatan5524/side-projects-manager/pkg/usecase/parentDirectory"
 	"github.com/spf13/cobra"
 )
@@ -16,23 +14,23 @@ var listDirectoriesCmd = &cobra.Command{
 }
 
 func ListDirectories(cmd *cobra.Command, args []string) {
-	db, err := config.InitDB()
-
-	if err != nil {
-		panic(err)
-	}
+	db := initDB()
 	defer db.Close()
 
-	repository := repository.NewParentDirectoryObjectBoxRepository(db)
-	service := usecase.NewParentDirectoryService(repository)
+	isVerbose := parseListDirectoriesFlags(cmd)
+	service := initParentDirectoryUsecase(db)
 
+	printListDirectories(service, isVerbose)
+}
+
+func parseListDirectoriesFlags(cmd *cobra.Command) bool {
 	isVerbose, err := cmd.Flags().GetBool(VERBOSE_FLAG)
 
 	if err != nil {
 		panic(err)
 	}
 
-	printListDirectories(service, isVerbose)
+	return isVerbose
 }
 
 func printListDirectories(service usecase.ParentDirectoryUsecase, isVerbose bool) {

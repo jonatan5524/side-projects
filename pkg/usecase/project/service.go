@@ -16,3 +16,11 @@ func NewProjectService(repo repository.ProjectRepository) ProjectUsecase {
 func (service *ProjectService) GetAll() ([]*model.Project, error) {
 	return service.repository.GetAll()
 }
+
+func (service ProjectService) DeleteByPath(path string) error {
+	return service.repository.DeleteByPath(path)
+}
+
+func (service ProjectService) Delete(project model.Project) error {
+	return service.repository.Delete(project)
+}

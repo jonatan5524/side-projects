@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	config "github.com/jonatan5524/side-projects-manager/pkg/config/db"
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
-	repository "github.com/jonatan5524/side-projects-manager/pkg/repository/parentDirectory"
 	usecase "github.com/jonatan5524/side-projects-manager/pkg/usecase/parentDirectory"
 	util "github.com/jonatan5524/side-projects-manager/pkg/util/io"
 	"github.com/spf13/cobra"
@@ -11,7 +9,7 @@ import (
 
 var (
 	addDirCmd = &cobra.Command{
-		Use:   "add-dir",
+		Use:   "add-dir [path of directory]",
 		Short: "Adding directory of side projects",
 		Long:  `Adding directory to list of directories that contains side projects`,
 		Run:   addDir,
@@ -23,15 +21,10 @@ func addDir(cmd *cobra.Command, args []string) {
 		panic("path not added")
 	}
 
-	db, err := config.InitDB()
-
-	if err != nil {
-		panic(err)
-	}
+	db := initDB()
 	defer db.Close()
 
-	repository := repository.NewParentDirectoryObjectBoxRepository(db)
-	service := usecase.NewParentDirectoryService(repository)
+	service := initParentDirectoryUsecase(db)
 
 	addParentDirectoryToDB(service, args[0], model.NewParentDirectory)
 }

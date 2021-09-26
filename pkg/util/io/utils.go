@@ -9,9 +9,9 @@ import (
 )
 
 var (
-	ErrFileNotExists    = errors.New("folder of file is not exists")
-	ErrDirInvalidType   = errors.New("path is not a directory type")
-	FilterByDirectories = func(curr os.FileInfo) bool {
+	ERR_FILE_NOT_EXISTS  = errors.New("folder of file is not exists")
+	ERR_DIR_INVALID_TYPE = errors.New("path is not a directory type")
+	FilterByDirectories  = func(curr os.FileInfo) bool {
 		return curr.IsDir()
 	}
 )
@@ -23,9 +23,9 @@ func GetDirectory(path string) (os.FileInfo, error) {
 	directory, err := os.Stat(path)
 
 	if errors.Is(err, os.ErrNotExist) {
-		return nil, core.NewIOError(path, ErrFileNotExists)
+		return nil, core.NewIOError(path, ERR_FILE_NOT_EXISTS)
 	} else if !directory.IsDir() {
-		return nil, core.NewIOError(path, ErrDirInvalidType)
+		return nil, core.NewIOError(path, ERR_DIR_INVALID_TYPE)
 	} else if err != nil {
 		return nil, core.NewIOError(path, err)
 	}
@@ -37,7 +37,7 @@ func ListDirectory(path string, filterByMethod FilterDirectoriesMethod) ([]os.Fi
 	files, err := ioutil.ReadDir(path)
 
 	if errors.Is(err, os.ErrNotExist) {
-		return []os.FileInfo{}, core.NewIOError(path, ErrFileNotExists)
+		return []os.FileInfo{}, core.NewIOError(path, ERR_FILE_NOT_EXISTS)
 	} else if err != nil {
 		return []os.FileInfo{}, core.NewIOError(path, err)
 	}
