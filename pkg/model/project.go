@@ -7,6 +7,7 @@ import (
 	"github.com/jedib0t/go-pretty/v6/table"
 	core "github.com/jonatan5524/side-projects-manager/pkg/core/io"
 	gitUtil "github.com/jonatan5524/side-projects-manager/pkg/util/git"
+	util "github.com/jonatan5524/side-projects-manager/pkg/util/git"
 	ioUtil "github.com/jonatan5524/side-projects-manager/pkg/util/io"
 )
 
@@ -87,4 +88,23 @@ func ConvertProjectToTablerSlice(projects []*Project) []core.Tabler {
 	}
 
 	return tablers
+}
+
+func (project Project) FullInfo() string {
+	projectInfo := fmt.Sprintf("Name: %s\n\rPath: %s\n\rLast Updated: %v\n\rHave version control: %t\n",
+		project.Name,
+		project.Path,
+		project.LastUpdated,
+		project.HaveVersionControl)
+
+	if project.HaveVersionControl {
+		host, _ := util.VersionControlHostType(project.Path)
+		branch, _ := util.VersionControlCurrentBranch(project.Path)
+		isClean, _ := util.IsVersionControlWorkingTreeClean(project.Path)
+
+		projectInfo = fmt.Sprintf("%s\n\rVersion Control:\n\rhost: %s\n\rcurrent branch: %sneed to commit: %t",
+			projectInfo, host, branch, !isClean)
+	}
+
+	return projectInfo
 }

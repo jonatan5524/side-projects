@@ -10,7 +10,7 @@ import (
 var (
 	addDirCmd = &cobra.Command{
 		Use:   "add-dir [path of directory]",
-		Short: "Adding directory of side projects",
+		Short: "Adding directory of side projects to db",
 		Long:  `Adding directory to list of directories that contains side projects`,
 		Run:   addDir,
 	}

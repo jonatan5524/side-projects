@@ -24,7 +24,7 @@ func TestDeleteProject(t *testing.T) {
 
 func TestDeleteProject_Fail(t *testing.T) {
 	path := "tmp"
-	err := core.NewDBError("RemoveByPath", repository.ERR_PATH_NOT_FOUND)
+	err := core.NewDBError("RemoveByPath", repository.ERR_PROJECT_NOT_FOUND)
 
 	mockService := new(mocks.ProjectUsecase)
 	mockService.On("DeleteByPath", path).Return(err)

@@ -7,7 +7,7 @@ import (
 
 var deleteDirCmd = &cobra.Command{
 	Use:   "delete-dir [path of directory]",
-	Short: "Deleting an assign directory with his path (not deleting from file system)",
+	Short: "Deleting an assign directory with his path from db (not deleting from file system)",
 	Long:  "Deleting an assign directory with his path (not deleting from file system)",
 	Run:   DeleteDirectoryCMD,
 }

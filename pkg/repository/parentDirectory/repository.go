@@ -3,6 +3,7 @@ package repository
 import (
 	"errors"
 
+	core "github.com/jonatan5524/side-projects-manager/pkg/core"
 	coreErrors "github.com/jonatan5524/side-projects-manager/pkg/core/errors"
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
 	repository "github.com/jonatan5524/side-projects-manager/pkg/repository/project"
@@ -56,7 +57,7 @@ func (repo ParentDirectoryObjectBoxRepository) Delete(dir model.ParentDirectory)
 }
 
 func (repo ParentDirectoryObjectBoxRepository) DeleteByPath(path string) error {
-	dir, err := repo.box.Query(model.ParentDirectory_.Path.Equals(path, true)).Limit(1).Find()
+	dir, err := repo.box.Query(model.ParentDirectory_.Path.Equals(path, core.CASE_SENSATIVE)).Limit(1).Find()
 
 	if err != nil {
 		return coreErrors.NewDBError("DeleteByPath", err)

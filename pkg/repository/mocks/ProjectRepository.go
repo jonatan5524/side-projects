@@ -60,6 +60,27 @@ func (_m *ProjectRepository) DeleteMany(_a0 ...*model.Project) error {
 	return r0
 }
 
+// Get provides a mock function with given fields: _a0
+func (_m *ProjectRepository) Get(_a0 string) (model.Project, error) {
+	ret := _m.Called(_a0)
+
+	var r0 model.Project
+	if rf, ok := ret.Get(0).(func(string) model.Project); ok {
+		r0 = rf(_a0)
+	} else {
+		r0 = ret.Get(0).(model.Project)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(_a0)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetAll provides a mock function with given fields:
 func (_m *ProjectRepository) GetAll() ([]*model.Project, error) {
 	ret := _m.Called()
