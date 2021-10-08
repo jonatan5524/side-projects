@@ -222,3 +222,38 @@ func TestDeleteByPath_Found(t *testing.T) {
 
 	assert.Nil(t, err)
 }
+
+func TestGet_Found(t *testing.T) {
+	t.Cleanup(cleanDB)
+
+	repo := repository.NewProjectObjectBoxRepository(testDB)
+	project := model.Project{
+		Name:        "project",
+		Path:        filepath.Join(os.TempDir(), "project"),
+		LastUpdated: time.Now(),
+	}
+
+	id, _ := repo.Put(project)
+	project.Id = id
+
+	retProject, err := repo.Get(project.Path)
+
+	assert.Nil(t, err)
+	assert.Equal(t, project.Id, retProject.Id)
+}
+
+func TestGet_NotFound(t *testing.T) {
+	t.Cleanup(cleanDB)
+
+	repo := repository.NewProjectObjectBoxRepository(testDB)
+	project := model.Project{
+		Name:        "project",
+		Path:        filepath.Join(os.TempDir(), "project"),
+		LastUpdated: time.Now(),
+	}
+
+	retProject, err := repo.Get(project.Path)
+
+	assert.Equal(t, model.NilProject, retProject)
+	assert.IsType(t, err, &core.DBError{})
+}

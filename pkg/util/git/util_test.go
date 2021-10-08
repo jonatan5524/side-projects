@@ -1,6 +1,7 @@
 package util_test
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
@@ -33,4 +34,31 @@ func TestIsInVersionControl_True(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.True(t, actual)
+}
+
+func TestParseRemoteURL_HTTPS(t *testing.T) {
+	expected := "github.com"
+	path := fmt.Sprintf("https://%s/madeup/repo", expected)
+
+	actual := util.ParseRemoteURL(path)
+
+	assert.Equal(t, expected, actual)
+}
+
+func TestParseRemoteURL_SSH(t *testing.T) {
+	expected := "github.com"
+	path := fmt.Sprintf("git@%s:madeup/repo.git", expected)
+
+	actual := util.ParseRemoteURL(path)
+
+	assert.Equal(t, expected, actual)
+}
+
+func TestParseRemoteURL_Unknown(t *testing.T) {
+	expected := "-"
+	path := "ftp://github.com:madeup/repo.git"
+
+	actual := util.ParseRemoteURL(path)
+
+	assert.Equal(t, expected, actual)
 }

@@ -7,7 +7,7 @@ import (
 
 var deleteProjectCmd = &cobra.Command{
 	Use:   "delete-project [path of project]",
-	Short: "Deleting an assign project with his path (not deleting from file system)",
+	Short: "Deleting an assign project with his path from db (not deleting from file system)",
 	Long:  "Deleting an assign project with his path (not deleting from file system)",
 	Run:   DeleteProjectCMD,
 }

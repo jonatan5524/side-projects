@@ -2,6 +2,10 @@
 
 Side projects manager, manages all your side projects in one place
 
+## Requirments
+
+Go version 1.17 or later
+
 ## Installation
 
 Install using go
@@ -48,3 +52,5 @@ Available commands:
 | `projects` | List all the side projects. |
 | `dirs` | List all the directories. |
 | `delete-dir` | Delete directory of side projects. |
+| `delete-project` | Delete side project. |
+| `project-info` | Delete directory of side projects. |

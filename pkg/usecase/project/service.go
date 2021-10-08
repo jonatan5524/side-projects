@@ -24,3 +24,7 @@ func (service ProjectService) DeleteByPath(path string) error {
 func (service ProjectService) Delete(project model.Project) error {
 	return service.repository.Delete(project)
 }
+
+func (service ProjectService) Get(path string) (model.Project, error) {
+	return service.repository.Get(path)
+}
