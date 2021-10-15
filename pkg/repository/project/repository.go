@@ -31,6 +31,16 @@ func (repo *ProjectObjectBoxRepository) GetAll() ([]*model.Project, error) {
 	return projects, nil
 }
 
+func (repo *ProjectObjectBoxRepository) GetRecent(amount int) ([]*model.Project, error) {
+	projects, err := repo.box.Query(model.Project_.LastUpdated.OrderDesc()).Limit(uint64(amount)).Find()
+
+	if err != nil {
+		return []*model.Project{}, coreErrors.NewDBError("GetRecent", err)
+	}
+
+	return projects, nil
+}
+
 func (repo *ProjectObjectBoxRepository) Put(project model.Project) (uint64, error) {
 	id, err := repo.box.Put(&project)
 

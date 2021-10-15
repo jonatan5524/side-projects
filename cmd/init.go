@@ -7,11 +7,7 @@ import (
 	DirectoryUsecase "github.com/jonatan5524/side-projects-manager/pkg/usecase/parentDirectory"
 	ProjectUsecase "github.com/jonatan5524/side-projects-manager/pkg/usecase/project"
 	"github.com/objectbox/objectbox-go/objectbox"
-	"github.com/spf13/cobra"
 )
-
-type handleCommandProject func(ProjectUsecase.ProjectUsecase, *cobra.Command, []string)
-type handleCommandParentDirectory func(DirectoryUsecase.ParentDirectoryUsecase, *cobra.Command, []string)
 
 func initDB() *objectbox.ObjectBox {
 	db, err := config.InitDB()

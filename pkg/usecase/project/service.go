@@ -5,6 +5,8 @@ import (
 	repository "github.com/jonatan5524/side-projects-manager/pkg/repository/project"
 )
 
+const RECENT_AMOUNT = 4
+
 type ProjectService struct {
 	repository repository.ProjectRepository
 }
@@ -27,4 +29,8 @@ func (service ProjectService) Delete(project model.Project) error {
 
 func (service ProjectService) Get(path string) (model.Project, error) {
 	return service.repository.Get(path)
+}
+
+func (service *ProjectService) GetRecent() ([]*model.Project, error) {
+	return service.repository.GetRecent(RECENT_AMOUNT)
 }
