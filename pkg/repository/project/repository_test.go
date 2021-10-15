@@ -257,3 +257,47 @@ func TestGet_NotFound(t *testing.T) {
 	assert.Equal(t, model.NilProject, retProject)
 	assert.IsType(t, err, &core.DBError{})
 }
+
+func TestGetRecent(t *testing.T) {
+	t.Cleanup(cleanDB)
+
+	repo := repository.NewProjectObjectBoxRepository(testDB)
+
+	const AMOUNT = 2
+
+	projects := []model.Project{
+		{
+			Name:               "project",
+			Path:               filepath.Join(os.TempDir(), "project"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: false,
+		},
+		{
+			Name:               "project2",
+			Path:               filepath.Join(os.TempDir(), "project2"),
+			LastUpdated:        time.Now().AddDate(0, -1, 0),
+			HaveVersionControl: false,
+		},
+		{
+			Name:               "project3",
+			Path:               filepath.Join(os.TempDir(), "project3"),
+			LastUpdated:        time.Now().AddDate(0, 0, -1),
+			HaveVersionControl: false,
+		},
+	}
+	repo.Put(projects[0])
+	repo.Put(projects[1])
+	repo.Put(projects[2])
+
+	expected := []model.Project{
+		projects[0],
+		projects[2],
+	}
+
+	actual, err := repo.GetRecent(AMOUNT)
+
+	assert.Nil(t, err)
+	assert.Len(t, actual, AMOUNT)
+	assert.Equal(t, expected[0].Name, actual[0].Name)
+	assert.Equal(t, expected[1].Name, actual[1].Name)
+}

@@ -54,3 +54,4 @@ Available commands:
 | `delete-dir [path]` | Delete directory of side projects from track (not from file system). |
 | `delete-project [path]` | Delete side project from track (not from file system). |
 | `project-info` | Delete directory of side projects. |
+| `recent` | List recent side projects. |

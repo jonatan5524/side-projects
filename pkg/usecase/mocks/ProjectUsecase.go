@@ -83,3 +83,26 @@ func (_m *ProjectUsecase) GetAll() ([]*model.Project, error) {
 
 	return r0, r1
 }
+
+// GetRecent provides a mock function with given fields:
+func (_m *ProjectUsecase) GetRecent() ([]*model.Project, error) {
+	ret := _m.Called()
+
+	var r0 []*model.Project
+	if rf, ok := ret.Get(0).(func() []*model.Project); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]*model.Project)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
