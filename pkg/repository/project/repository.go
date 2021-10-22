@@ -21,6 +21,16 @@ func NewProjectObjectBoxRepository(objectbox *objectbox.ObjectBox) ProjectReposi
 	return &ProjectObjectBoxRepository{model.BoxForProject(objectbox)}
 }
 
+func (repo *ProjectObjectBoxRepository) GetAllFilteredGit() ([]*model.Project, error) {
+	projects, err := repo.box.Query(model.Project_.HaveVersionControl.Equals(true)).Find()
+
+	if err != nil {
+		return []*model.Project{}, coreErrors.NewDBError("GetAll", err)
+	}
+
+	return projects, nil
+}
+
 func (repo *ProjectObjectBoxRepository) GetAll() ([]*model.Project, error) {
 	projects, err := repo.box.GetAll()
 

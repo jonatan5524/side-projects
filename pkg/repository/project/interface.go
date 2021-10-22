@@ -6,6 +6,7 @@ import (
 
 type ProjectRepository interface {
 	GetAll() ([]*model.Project, error)
+	GetAllFilteredGit() ([]*model.Project, error)
 	GetRecent(int) ([]*model.Project, error)
 	Get(string) (model.Project, error)
 	Put(model.Project) (uint64, error)

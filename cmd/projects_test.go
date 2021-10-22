@@ -22,7 +22,7 @@ func TestPrintListProjects_NotVerbose(t *testing.T) {
 
 	outputHandler = mockOutputHandler
 
-	printListProjects(mockService, false)
+	printListProjects(mockService, false, "")
 
 	mockOutputHandler.AssertNotCalled(t, "PrintTable")
 }
@@ -57,7 +57,7 @@ func TestPrintListProjects_Verbose(t *testing.T) {
 
 	outputHandler = mockOutputHandler
 
-	printListProjects(mockService, true)
+	printListProjects(mockService, true, "")
 
 	mockOutputHandler.AssertNumberOfCalls(t, "PrintTable", 1)
 }

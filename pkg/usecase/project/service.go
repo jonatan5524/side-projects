@@ -15,6 +15,14 @@ func NewProjectService(repo repository.ProjectRepository) ProjectUsecase {
 	return &ProjectService{repo}
 }
 
+func (service *ProjectService) GetAllFiltered(filter string) ([]*model.Project, error) {
+	if filter == "git" {
+		return service.repository.GetAllFilteredGit()
+	}
+
+	return []*model.Project{}, nil
+}
+
 func (service *ProjectService) GetAll() ([]*model.Project, error) {
 	return service.repository.GetAll()
 }
