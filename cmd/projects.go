@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"strings"
+
 	"github.com/jonatan5524/side-projects-manager/pkg/model"
 	usecase "github.com/jonatan5524/side-projects-manager/pkg/usecase/project"
 	"github.com/spf13/cobra"
@@ -15,28 +17,47 @@ var (
 	}
 )
 
+const LIST_PROJECTS_FILTERS = "git"
+
 func ListProjects(cmd *cobra.Command, args []string) {
 	db := initDB()
 	defer db.Close()
 
-	isVerbose := parseListProjectsFlags(cmd)
+	isVerbose, filter := parseListProjectsFlags(cmd)
 	service := initProjectUsecase(db)
 
-	printListProjects(service, isVerbose)
+	printListProjects(service, isVerbose, filter)
 }
 
-func parseListProjectsFlags(cmd *cobra.Command) bool {
+func parseListProjectsFlags(cmd *cobra.Command) (bool, string) {
 	isVerbose, err := cmd.Flags().GetBool(VERBOSE_FLAG)
 
 	if err != nil {
 		panic(err)
 	}
 
-	return isVerbose
+	filter, err := cmd.Flags().GetString(FILTER_FLAG)
+
+	if err != nil {
+		panic(err)
+	}
+
+	if !strings.Contains(LIST_PROJECTS_FILTERS, filter) {
+		panic("Invalid filter")
+	}
+
+	return isVerbose, filter
 }
 
-func printListProjects(service usecase.ProjectUsecase, isVerbose bool) {
-	projects, err := service.GetAll()
+func printListProjects(service usecase.ProjectUsecase, isVerbose bool, filter string) {
+	var projects []*model.Project
+	var err error
+
+	if filter != "" {
+		projects, err = service.GetAllFiltered(filter)
+	} else {
+		projects, err = service.GetAll()
+	}
 
 	if err != nil {
 		panic(err)
@@ -67,5 +88,7 @@ func printNormalListProjects(projects []*model.Project) {
 
 func init() {
 	rootCmd.AddCommand(listProjectsCmd)
+
 	listProjectsCmd.Flags().BoolP(VERBOSE_FLAG, "v", false, "Print list projects verbose with all the data on the projects")
+	listProjectsCmd.Flags().StringP(FILTER_FLAG, "f", "", "filter list of projects")
 }

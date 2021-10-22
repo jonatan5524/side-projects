@@ -301,3 +301,39 @@ func TestGetRecent(t *testing.T) {
 	assert.Equal(t, expected[0].Name, actual[0].Name)
 	assert.Equal(t, expected[1].Name, actual[1].Name)
 }
+
+func TestGetAllFilteredGit_Length(t *testing.T) {
+	t.Cleanup(cleanDB)
+
+	const AMOUNT int = 2
+	repo := repository.NewProjectObjectBoxRepository(testDB)
+
+	expected := []model.Project{
+		{
+			Name:               "project",
+			Path:               filepath.Join(os.TempDir(), "project"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: false,
+		},
+		{
+			Name:               "project2",
+			Path:               filepath.Join(os.TempDir(), "project2"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: true,
+		},
+		{
+			Name:               "project3",
+			Path:               filepath.Join(os.TempDir(), "project3"),
+			LastUpdated:        time.Now(),
+			HaveVersionControl: true,
+		},
+	}
+	repo.Put(expected[0])
+	repo.Put(expected[1])
+	repo.Put(expected[2])
+
+	projects, err := repo.GetAllFilteredGit()
+
+	assert.Nil(t, err)
+	assert.Len(t, projects, AMOUNT)
+}
